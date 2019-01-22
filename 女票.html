@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>女票</title>
+    <style>
+        ul{list-style: none;padding:0;margin:0;}
+        .msg-list{width:600px;margin:0 auto;}
+        .msg-list ul{padding:10px;min-height:200px;overflow:hidden;border:1px solid #ddd;}
+        .msg-list li{float:left;clear:both;margin:10px 0;padding:5px;line-height:2;border-radius:5px;background-color:#efefef;}
+        .msg-list li.active{float:right;background-color:#fc0;color:#fff;}
+        .msg-list textarea{display:block;min-height:50px;margin:10px 0;width:100%;box-sizing: border-box;}
+    </style>    
+    <script>
+        window.onload = function(){
+            var qarr = "想我么、在干吗、约吗、你好吗、丁、你是谁、你认识我吗、我认识你吗、你能干嘛、女票、我怎么知道、你叫什么、你多大、你男的女的、我不猜、我就要问、哎呀".split("、");
+            var aarr = "想你吗、对、约你吗、你若安好,便是晴天、秀~秀~秀~秀~秀~秀~秀~秀~秀~秀~秀~秀~秀~秀~秀~秀~秀~...、你说我是谁、人人喊打、这不就认识了？、不能、臭不要脸的、不知道就别问、我没叫、肯定比你小、你猜、爱猜不猜、我就不说、嗯哼".split("、");
+            // 1.点击提交时，将消息生成li，发到ul
+            var autoAnswer = document.getElementById("autoAnswer");
+            var ulList = autoAnswer.children[0];//0号儿子
+            var msg = autoAnswer.children[1];
+            var btn = autoAnswer.children[2];
+            btn.onclick = function(){
+                var _msg = msg.value;
+                var li = document.createElement("li");//创建元素li
+                li.innerHTML = _msg;//内容给li
+                li.className = "active";
+                ulList.appendChild(li);//加个小儿子
+                msg.value = "";
+                msg.focus();
+
+                // 2.你发送后，机器人延迟一秒回复"哈哈哈"
+                // 3.判断_msg在qarr数组中的索引，如果有索引，对应索引回答。如果找不到该索引，就回复你真可爱
+                setTimeout(function(){
+                    var li = document.createElement("li");//创建元素
+                    var idx = qarr.indexOf(_msg);
+                    //qarr.（_msg第一次出现的索引）
+                    if(idx == -1){//-1没有这个回答
+                        li.innerHTML = "你真可爱";//统一回复
+                    }else{
+                        li.innerHTML = aarr[idx];//对答
+                    }
+                    ulList.appendChild(li);//插个li在后面
+                }, 1000)
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>女票</h1>
+    <div id="autoAnswer" class="msg-list">
+        <ul>
+        </ul>
+        <textarea></textarea>
+        <button>提交</button>
+    </div>
+
+    
+    <div class="content">
+        <h4>要求：</h4>
+        <ol>
+            <li>点击按钮发送信息</li>
+            <li>点击发送消息</li>
+            <li>根据输入的信息，机器人延迟1秒做出响应回答，你可以问：
+                <p>你叫什么</p>
+                <p>你多大</p>
+                <p>你男的女的</p>
+                <p>想我么</p>
+                <p>在干吗</p>
+                <p>约吗</p>
+                <p>你好吗</p>
+                <p>丁</p>
+                <p>你是谁</p>
+                <p>你认识我吗</p>
+                <p>我认识你吗</p>
+                <p>你能干嘛</p>
+                <p>女票</p>
+                <p>我怎么知道</p>
+            </li>
+        </ol>
+    </div>
+</body>
+</html>
