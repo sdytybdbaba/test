@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>天气预报</title>
+	<script src="../js/@@@FZHS.js" type="text/javascript" charset="utf-8"></script>
+	<style>
+		*{margin: 0;padding: 0;}
+		body{
+			margin: 20px;
+		}
+		#btn{
+			padding: 0 5px;
+			background: rgb(248,34,43); 
+			color: rgb(253,245,30);
+			border: 2px solid rgb(255,211,45);
+		}
+		/*发光input*/
+		input[type=text], textarea {
+		    -webkit-transition: all 0.30s ease-in-out;
+		    -moz-transition: all 0.30s ease-in-out;
+		    -ms-transition: all 0.30s ease-in-out;
+		    -o-transition: all 0.30s ease-in-out;
+		    outline: none;
+		    padding: 3px 0px 3px 3px;
+		    margin: 5px 1px 3px 0px;
+		    border: 1px solid #ddd;
+		}
+
+		input[type=text]:focus, textarea:focus {
+		    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+		    padding: 3px 0px 3px 3px;
+		    margin: 5px 1px 3px 0px;
+		    border: 1px solid rgba(81, 203, 238, 1);
+		}
+		h1 { 
+		  text-shadow: 0 1px 0 #ccc, 
+		               0 2px 0 #c9c9c9, 
+		               0 3px 0 #bbb, 
+		               0 4px 0 #b9b9b9, 
+		               0 5px 0 #aaa, 
+		               0 6px 1px rgba(0,0,0,.1), 
+		               0 0 5px rgba(0,0,0,.1), 
+		               0 1px 3px rgba(0,0,0,.3), 
+		               0 3px 5px rgba(0,0,0,.2), 
+		               0 5px 10px rgba(0,0,0,.25), 
+		               0 10px 10px rgba(0,0,0,.2), 
+		               0 20px 20px rgba(0,0,0,.15); 
+		} 
+		/**/
+		/**/
+		a{
+			font-size: 20px;
+			color: rgb(245,42,56);
+			text-decoration: none;
+		}
+		#cx>div{
+			display: inline-block;
+			width: 170px;
+			height: 140px;
+			border: 2px solid rgb(246,248,72);
+			background: rgb(149,242,128);
+			font-size: 16px;
+			color: rgb(66,165,204);
+			border-radius: 10px;
+		}
+		p{
+			margin-top: 5px;
+			color: rgb(252,125,58);
+		}
+
+
+	</style>
+	<script type="text/javascript">
+		window.onload = function(){
+			//CORS方式实现跨越，network 查看响应头：Access-Control-Allow-Origin: *
+			// var url='http://wthrcdn.etouch.cn/weather_mini?city=玉林';
+			// ajax('GET',url,'',function(str){
+			// 	console.log(str);
+			// 	var arr=JSON.parse(str);
+			// 	console.log(arr);
+			// });
+			var btn = document.getElementById("btn");
+			var srk = document.getElementById("srk");
+			var cx = document.getElementById("cx");
+			btn.onclick = () =>{
+				cx.innerHTML = "";
+				var _srk = srk.value;
+				var url='http://wthrcdn.etouch.cn/weather_mini?city=' + _srk;
+				ajax('GET',url,'',function(str){
+					var arr=JSON.parse(str);
+					console.log(arr);
+					if (arr.status==1000) {
+						var arrs = arr.data;
+						var fengli = arrs.yesterday.fl;
+						var fl = (fengli.split('['))[2];
+						var fls = fl.split(']')[0];
+						cx.innerHTML += `
+										<a target="_blank" href="https://www.baidu.com/s?ie=utf-8&wd=`+arrs.city+`"><strong>城市：`+arrs.city+`</strong></a><br />
+										<div>
+											<span><strong>2019年1月`+arrs.yesterday.date+`</strong></span><br />
+											<span>风向：<strong>`+arrs.yesterday.fx+`</strong></span><br />
+											<span>风力：<strong>`+fls+`</strong></span><br />
+											<span>全天最`+arrs.yesterday.high+`</span><br />
+											<span>全天最`+arrs.yesterday.low+`</span><br />
+											<span>天气状况：<strong>`+arrs.yesterday.type+`</strong></span>
+										</div>
+							`;
+						for(var i = 0;i<4;i++){
+							var fengli = arrs.forecast[i].fengli;
+							var fl = (fengli.split('['))[2];
+							var fls = fl.split(']')[0];
+							cx.innerHTML += `<div>
+												<span><strong>2019年1月`+arrs.forecast[i].date+`</strong></span><br />
+												<span>风向：<strong>`+arrs.forecast[i].fengxiang+`</strong></span><br />
+												<span>风力：<strong>`+fls+`</strong></span><br />
+												<span>全天最`+arrs.forecast[i].high+`</span><br />
+												<span>全天最`+arrs.forecast[i].low+`</span><br />
+												<span>天气状况：<strong>`+arrs.forecast[i].type+`</strong></span>
+											</div>
+							`;
+						}
+						cx.innerHTML += `<p>注意：今日全天最高温度`+arrs.wendu+`度</p><p>温馨提示：今日`+arrs.ganmao+`</p>` ;
+					}else{
+						alert("请输入正确的城市");
+					}
+					
+				});
+			}
+		}
+	</script>
+</head>
+<body>
+	<input type="text" placeholder="输入你要查询天气的城市" id="srk">
+	<input type="button" value="查询" id="btn"><br>
+	<div id="cx"></div>
+
+</body>
+</html>
